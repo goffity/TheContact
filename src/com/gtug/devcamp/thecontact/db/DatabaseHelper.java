@@ -84,6 +84,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return cont;
 	}
 
+	public Cursor getContactCursor() {
+		SQLiteDatabase db = getReadableDatabase();
+		String[] cols = new String[] { "id", "firstname", "lastName",
+				"nickname", "mobile", "email", "note" };
+
+		Cursor cursor = db.query("contact", cols, null, null, null, null, null);
+
+		ArrayList<ContactModel> ret = new ArrayList<ContactModel>();
+
+		while (cursor.moveToNext()) {
+			ContactModel contact = new ContactModel();
+
+			contact.setId(cursor.getInt(0));
+			contact.setFirstName(cursor.getString(1));
+			contact.setLastName(cursor.getString(2));
+			contact.setNickName(cursor.getString(3));
+			contact.setMobile(cursor.getString(4));
+			contact.setEmail(cursor.getString(5));
+			contact.setNote(cursor.getString(6));
+
+			ret.add(contact);
+		}
+
+		ContactModel[] cont = new ContactModel[ret.size()];
+		for (int i = 0; i < cont.length; i++) {
+			ContactModel temp = ret.get(i);
+			cont[i] = temp;
+		}
+		// cont = (ContactModel[]) ret.toArray();
+
+		db.close();
+
+		return cursor;
+	}
+
 	public ContactModel getMyContact() {
 		SQLiteDatabase db = getWritableDatabase();
 		String[] cols = new String[] { "id", "firstname", "lastName",
