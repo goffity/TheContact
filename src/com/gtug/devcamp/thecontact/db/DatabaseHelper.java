@@ -1,6 +1,7 @@
 package com.gtug.devcamp.thecontact.db;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -47,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	/*
 	 * Model
 	 */
-	
+
 	public ContactModel[] getContact() {
 		SQLiteDatabase db = getReadableDatabase();
 		String[] cols = new String[] { "id", "firstname", "lastName",
@@ -63,15 +64,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			contact.setId(cursor.getInt(0));
 			contact.setFirstName(cursor.getString(1));
 			contact.setLastName(cursor.getString(2));
-			contact.setMobile(cursor.getString(3));
-			contact.setEmail(cursor.getString(4));
-			contact.setNote(cursor.getString(5));
+			contact.setNickName(cursor.getString(3));
+			contact.setMobile(cursor.getString(4));
+			contact.setEmail(cursor.getString(5));
+			contact.setNote(cursor.getString(6));
 
 			ret.add(contact);
 		}
 
 		ContactModel[] cont = new ContactModel[ret.size()];
-		cont = (ContactModel[]) ret.toArray();
+		for (int i = 0; i < cont.length; i++) {
+			ContactModel temp = ret.get(i);
+			cont[i] = temp;
+		}
+		// cont = (ContactModel[]) ret.toArray();
 
 		db.close();
 
@@ -96,9 +102,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			contact.setId(cursor.getInt(0));
 			contact.setFirstName(cursor.getString(1));
 			contact.setLastName(cursor.getString(2));
-			contact.setMobile(cursor.getString(3));
-			contact.setEmail(cursor.getString(4));
-			contact.setNote(cursor.getString(5));
+			contact.setNickName(cursor.getString(3));
+			contact.setMobile(cursor.getString(4));
+			contact.setEmail(cursor.getString(5));
+			contact.setNote(cursor.getString(6));
 
 			db.close();
 
@@ -155,8 +162,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		values.put("note", contactModel.getNote());
 		values.put("picture", contactModel.getPicture());
 		values.put("flag", contactModel.getFlag());
-		
-		//check dup
+
+		// check dup
 		long id = 0;
 		if (getContactByNumber(contactModel.getMobile()) != null) {
 			id = db.insert("contact", null, values);
@@ -165,6 +172,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.close();
 
 		return id;
+
+	}
+
+	private void populateObj(ContactModel contact) {
 
 	}
 
